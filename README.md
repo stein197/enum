@@ -32,13 +32,16 @@ And it grows and grows. Instead, use complex enumerations like this:
 import Enum from "@stein197/ts-enum";
 
 class Status extends Enum<{label: string, code: number}> {
-	public static readonly UNSENT = new Status({label: "Request is insent", code: 0});
+	public static readonly UNSENT = new Status({label: "Request is unsent", code: 0});
 	public static readonly OPENED = new Status({label: "Request is opened", code: 1});
 	// ...
+	public getLabel(): string { // You can use methods as well
+		return this.properties.label;
+	}
 }
 ```
 
-That's it! Later yuou can retrieve neccessary data and even name from entries:
+That's it! Later you can retrieve neccessary data and even name from entries:
 ```ts
 Status.UNSENT.properties.label; // "Request is unsent"
 Status.UNSENT.name; // "UNSENT"
