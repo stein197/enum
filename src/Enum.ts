@@ -1,4 +1,4 @@
-export default class Enum<T extends {[key: string]: any}> {
+export default abstract class Enum<T extends {[key: string]: any}> {
 
 	private _name: string;
 	private static _values: Enum<{}>[];
