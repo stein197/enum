@@ -21,13 +21,7 @@ export default class Enum<T extends {[key: string]: any}> {
 
 	protected constructor(public readonly properties: T) {}
 
-	public static from(data: string): Enum<{}>;
-
-	public static from<T>(data: T): Enum<{}>;
-
-	public static from<T>(data: string | T): Enum<{}> {
-		return typeof data === "string" ? (this as any)[data] : this.values.filter(entry => this.objectsAreEqual(data, entry.properties))[0]
-	}
+	public static readonly from = <T>(data: string | T): Enum<{}> => typeof data === "string" ? (this as any)[data] : this.values.filter(entry => this.objectsAreEqual(data, entry.properties))[0];
 
 	private static objectsAreEqual<T>(obj1: T, obj2: T): boolean {
 		for (const [key] of Object.entries(obj1))
