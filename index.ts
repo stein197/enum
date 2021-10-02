@@ -42,7 +42,7 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	public static from<T extends Enum<{}>>(data: number | string | Partial<T["properties"]>): Nullable<T> {
 		const values = this.values<T>();
 		if (typeof data === "number") {
-			return values.find(entry => entry.id === data);
+			return values.find(entry => entry.id === data) || null;
 		} else if (typeof data === "string") {
 			return values.find(entry => entry.name === data);
 		} else {
