@@ -1,32 +1,55 @@
 export default abstract class Enum<T extends {[key: string]: any}> {
 
-	private _name: string;
-	private static _values: Enum<{}>[];
+	private static __values: Enum<{}>[];
+	private static __nextId: number = 0;
+
+	private __name: Nullable<string> = null;
 
 	public get name(): string {
-		if (!this._name)
-			this._name = Object.entries(this.constructor).filter(entry => entry[1] === this)[0][0];
-		return this._name;
+		return this.__name || (this.__name = Object.entries(this.constructor).filter(entry => entry[1] === this)[0][0]);
 	}
 
-	public static get values(): Enum<{}>[] {
-		if (!this._values) {
-			const entries: [string, Enum<{}>][] = Object.entries(this);
-			this._values = new Array(entries.length);
-			for (const i in entries)
-				this._values[i] = entries[i][1];
+	protected constructor(public readonly properties: T, public readonly id?: number) {
+		const ctor = this.constructor as typeof Enum;
+		if (id == undefined) {
+			this.id = ctor.__nextId++;
+		} else {
+			if (id < 0)
+				throw new Error(`Id ${id} cannot be less than 0`);
+			if (id < ctor.__nextId)
+				throw new Error(`Entry "${this.constructor.name}" with id ${id} may exist`);
+			this.id = id;
+			ctor.__nextId = id + 1;
 		}
-		return this._values;
 	}
 
-	protected constructor(public readonly properties: T) {}
+	public static values<T extends Enum<{}>>(): T[] {
+		if (!this.__values) {
+			const entries: [string, Enum<{}>][] = Object.entries(this).filter(entry => entry[1] instanceof this);
+			this.__values = new Array(entries.length);
+			for (const i in entries)
+				this.__values[i] = entries[i][1];
+		}
+		return this.__values as T[];
+	}
 
-	public static readonly from = <T>(data: string | T): Enum<{}> => typeof data === "string" ? (this as any)[data] : this.values.filter(entry => this.objectsAreEqual(data, entry.properties))[0];
+	public static from<T extends Enum<{}>>(id: number): Nullable<T>;
 
-	private static objectsAreEqual<T>(obj1: T, obj2: T): boolean {
-		for (const [key] of Object.entries(obj1))
-			if ((obj1 as any)[key] !== (obj2 as any)[key])
-				return false;
-		return true;
+	public static from<T extends Enum<{}>>(name: string): Nullable<T>;
+
+	public static from<T extends Enum<{}>>(properties: Partial<T["properties"]>): Nullable<T>;
+
+	public static from<T extends Enum<{}>>(data: number | string | Partial<T["properties"]>): Nullable<T> {
+		const values = this.values<T>();
+		if (typeof data === "number") {
+			return values.find(entry => entry.id === data);
+		} else if (typeof data === "string") {
+			return values.find(entry => entry.name === data);
+		} else {
+			const matched = values.filter(entry => Object.entries(data).every(property => property[0] in entry.properties));
+			return matched.length === 1 ? matched[0] : null;
+		}
 	}
 }
+
+type Nullable<T> = T | null | undefined;

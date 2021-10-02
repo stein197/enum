@@ -3,7 +3,7 @@
 		"outDir": "out",
 		"target": "ESNext",
 		"strict": true,
-		"strictNullChecks": false,
+		"strictNullChecks": true,
 		"baseUrl": "src",
 		"rootDir": "src",
 		"noUnusedLocals": true,
@@ -11,8 +11,5 @@
 		"allowUnusedLabels": false,
 		"moduleResolution": "node",
 		"resolveJsonModule": true
-	},
-	"include": [
-		"src"
-	]
+	}
 }
