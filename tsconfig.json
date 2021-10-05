@@ -1,15 +1,24 @@
 {
 	"compilerOptions": {
-		"outDir": "out",
 		"target": "ESNext",
 		"strict": true,
-		"strictNullChecks": true,
-		"baseUrl": "src",
-		"rootDir": "src",
+		"module": "CommonJS",
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"allowUnusedLabels": false,
 		"moduleResolution": "node",
-		"resolveJsonModule": true
-	}
+		"declaration": true,
+		"esModuleInterop": true,
+		"declarationDir": ".",
+		"noImplicitAny": true,
+		"resolveJsonModule": true,
+		"lib": [
+			"DOM",
+			"ES2017"
+		]
+	},
+	"include": [
+		"*.ts"
+	],
+	"exclude": []
 }

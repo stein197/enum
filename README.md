@@ -1,9 +1,9 @@
-# Complex enum implementation for TypeScript
+# Complex enum implementation for JavaScript & TypeScript
 TypeScript provides a very simple and primitive implementation of enumerations. All you can do with native implementation is to declare numeric or string enum values. But sometimes there is a need of more complex enumerations - that have properties or even methods. This package provides such an implementation that exists in Java and PHP.
 
 ## Installation
 ```
-npm install @stein197/ts-enum
+npm install @stein197/enum
 ```
 
 ## Usage
