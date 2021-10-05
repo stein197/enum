@@ -29,7 +29,7 @@ enum StatusLabel {
 
 And it grows and grows. Instead, use complex enumerations like this:
 ```ts
-import Enum from "@stein197/ts-enum";
+import Enum from "@stein197/enum";
 
 class Status extends Enum<{label: string, code: number}> {
 	public static readonly UNSENT = new Status({label: "Request is unsent", code: 0});
@@ -58,3 +58,8 @@ Status.from("DONE"); // Status.DONE
 Status.from({label: "done", status: 4}); // Status.DONE
 Status.from("NONEXISTENT"); // null
 ```
+
+## NPM scripts
+ - `clean` Cleans compiled files
+ - `build`, `build:dev` Builds the project
+ - `test` Runs all unit tests
