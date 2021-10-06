@@ -10,7 +10,7 @@
  * ```
  * @paramType T - Map of properties that the current enumeration can have.
  */
-export abstract class Enum<T extends {[key: string]: any}> {
+export default abstract class Enum<T extends {[key: string]: any}> {
 
 	private static __values: Enum<{}>[];
 	private static __nextId: number = 0;

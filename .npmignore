@@ -1,6 +1,5 @@
-/test.ts
 /tsconfig.json
 /*.ts
-!/*.d.ts
 /clean*
-/test.*
+!/*.d.ts
+/EnumTest.*

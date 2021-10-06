@@ -2,8 +2,8 @@
   "name": "@stein197/enum",
   "version": "1.0.0",
   "description": "Complex enum implementation for JavaScript & TypeScript",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "Enum.js",
+  "types": "Enum.d.ts",
   "scripts": {
     "clean": "clean",
     "prebuild": "clean",
@@ -11,7 +11,7 @@
     "prebuild:dev": "clean",
     "build:dev": "tsc --allowUnusedLabels true --noUnusedLocals false --noUnusedParameters false",
     "pretest": "npm run build:dev",
-    "test": "mocha test.js"
+    "test": "mocha EnumTest.js"
   },
   "repository": {
     "type": "git",

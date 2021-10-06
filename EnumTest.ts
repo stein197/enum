@@ -1,6 +1,6 @@
 import should from "should";
 import mocha from "mocha";
-import {Enum} from ".";
+import Enum from "./Enum";
 
 class Status extends Enum<{code: number; message: string}> {
 	public static readonly Ok = new Status({code: 200, message: "OK"});
