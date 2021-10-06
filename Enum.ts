@@ -15,7 +15,7 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	private static __values: Enum<{}>[];
 	private static __nextId: number = 0;
 
-	/** Unique entry id. Each instantiated entry has an id greater by previous by 1 */
+	/** Unique entry id. Each instantiated entry has an id greater than previous by 1 */
 	public readonly id: number;
 	private __name: Nullable<string> = null;
 
@@ -30,7 +30,8 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	 * Create new enum "constant".
 	 * @param properties Properties that current entry will have.
 	 * @param id Manually selected id for a new entry.
-	 * @throws {@link Error} If id is manually set and it is less than 0 or the currently highest id across the enum.
+	 * @throws {@link Error} If id is manually set and it is less than 0 or less then the currently highest id across
+	 *                       the enum.
 	 */
 	protected constructor(public readonly properties: T, id?: number) {
 		const ctor = this.constructor as typeof Enum;
@@ -47,7 +48,8 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	}
 
 	/**
-	 * Return all entries that current enumeration have. It is worth specifying the type.
+	 * Return all entries that current enumeration have. It is worth specifying the type. Does not return other static
+	 * fields than entries.
 	 * @returns All entries of clling enumeration in order they declared.
 	 */
 	public static values<T extends Enum<{}>>(): T[] {
@@ -63,14 +65,14 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	/**
 	 * Returns enum entry by its id.
 	 * @param id Id of searched entry.
-	 * @returns Entry or undefined if not found.
+	 * @returns Entry or null if not found.
 	 */
 	public static from<T extends Enum<{}>>(id: number): Nullable<T>;
 	
 	/**
 	 * Returns enum entry by its name.
 	 * @param name Name of searched entry.
-	 * @returns Entry or undefined if not found.
+	 * @returns Entry or null if not found.
 	 */
 	public static from<T extends Enum<{}>>(name: string): Nullable<T>;
 	
@@ -79,16 +81,16 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	 * @param properties Properties of searched entry. Properties does not have to match the signature exactly. For
 	 *                   example if enum has three fields in properties and one of them is unique (like id) then an
 	 *                   object with only this key can be passed. The same if there are two uniue keys and so on.
-	 * @returns Entry or undefined if not found or if more than one entries match passed properties.
+	 * @returns Entry or null if not found or if more than one entries match passed properties.
 	 */
 	public static from<T extends Enum<{}>>(properties: Partial<T["properties"]>): Nullable<T>;
 
 	public static from<T extends Enum<{}>>(data: number | string | Partial<T["properties"]>): Nullable<T> {
 		const values = this.values<T>();
 		if (typeof data === "number") {
-			return values.find(entry => entry.id === data);
+			return values.find(entry => entry.id === data) || null;
 		} else if (typeof data === "string") {
-			return values.find(entry => entry.name === data);
+			return values.find(entry => entry.name === data) || null;
 		} else {
 			const matched = values.filter(entry => Object.entries(data).every(property => property[0] in entry.properties && (entry.properties as any)[property[0]] === property[1]));
 			return matched.length === 1 ? matched[0] : null;
