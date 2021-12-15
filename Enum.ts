@@ -1,41 +1,39 @@
 /**
- * Base class for all complex enums. Basically it's a replacement for primitive TypeScript enums with support of
- * properties, methods and other features. Basic usage is:
+ * Base class for all complex enums. Basic usage is:
  * ```ts
- * class Status extends Enum<{code: number; message: string}> {
- *     public static readonly OK = new Status({code: 200, message: "Ok"});
- *     public static readonly NOT_FOUND = new Status({code: 404, message: "Not found"});
+ * class Status extends Enum {
+ *     public static readonly OK = new Status(200, "Ok");
+ *     public static readonly NOT_FOUND = new Status(404, "Not found");
  *     // ...
  * }
  * ```
- * @paramType T - Map of properties that the current enumeration can have.
  */
-export default abstract class Enum<T extends {[key: string]: any}> {
+export default abstract class Enum {
 
-	private static __values: Enum<{}>[];
+	private static __values: Enum[];
 	private static __nextId: number = 0;
+	private static __length: number;
 
 	/** Unique entry id. Each instantiated entry has an id greater than previous by 1 */
 	public readonly id: number;
-	private __name: Nullable<string> = null;
+	private __name: string | null = null;
 
 	/**
-	 * Unique name of the entry. Equals to entry name.
+	 * Unique name of the entry.
 	 */
 	public get name(): string {
 		return this.__name || (this.__name = Object.entries(this.constructor).filter(entry => entry[1] === this)[0][0]);
 	}
 
 	/**
-	 * Create new enum "constant".
-	 * @param properties Properties that current entry will have.
+	 * Creates a new enum constant.
 	 * @param id Manually selected id for a new entry.
-	 * @throws {@link Error} If id is manually set and it is less than 0 or less then the currently highest id across
+	 * @throws {@link Error} If id is manually set and it is less than 0 or less than the currently highest id across
 	 *                       the enum.
 	 */
-	protected constructor(public readonly properties: T, id?: number) {
+	protected constructor(id?: number) {
 		const ctor = this.constructor as typeof Enum;
-		if (id == undefined) {
+		if (id == void 0) {
 			this.id = ctor.__nextId++;
 		} else {
 			if (id < 0)
@@ -48,54 +46,50 @@ export default abstract class Enum<T extends {[key: string]: any}> {
 	}
 
 	/**
-	 * Return all entries that current enumeration have. It is worth specifying the type. Does not return other static
-	 * fields than entries.
-	 * @returns All entries of clling enumeration in order they declared.
+	 * Returns all entries that the current enum have. Does not return other static fields.
+	 * @returns All entries of the current enum in order they declared.
 	 */
-	public static values<T extends Enum<{}>>(): T[] {
+	public static values(): Enum[] {
 		if (!this.__values) {
-			const entries: [string, Enum<{}>][] = Object.entries(this).filter(entry => entry[1] instanceof this);
+			const entries: [string, Enum][] = Object.entries(this).filter(entry => entry[1] instanceof this);
 			this.__values = new Array(entries.length);
 			for (const i in entries)
 				this.__values[i] = entries[i][1];
 		}
-		return this.__values as T[];
+		return this.__values;
 	}
 
 	/**
-	 * Returns enum entry by its id.
+	 * Returns an enum entry by its id.
 	 * @param id Id of searched entry.
 	 * @returns Entry or null if not found.
 	 */
-	public static from<T extends Enum<{}>>(id: number): Nullable<T>;
+	public static from(id: number): Enum | null;
 	
 	/**
-	 * Returns enum entry by its name.
+	 * Returns an enum entry by its name.
 	 * @param name Name of searched entry.
 	 * @returns Entry or null if not found.
 	 */
-	public static from<T extends Enum<{}>>(name: string): Nullable<T>;
-	
-	/**
-	 * Returns enum entry by properties.
-	 * @param properties Properties of searched entry. Properties does not have to match the signature exactly. For
-	 *                   example if enum has three fields in properties and one of them is unique (like id) then an
-	 *                   object with only this key can be passed. The same if there are two uniue keys and so on.
-	 * @returns Entry or null if not found or if more than one entries match passed properties.
-	 */
-	public static from<T extends Enum<{}>>(properties: Partial<T["properties"]>): Nullable<T>;
+	public static from(name: string): Enum | null;
 
-	public static from<T extends Enum<{}>>(data: number | string | Partial<T["properties"]>): Nullable<T> {
-		const values = this.values<T>();
-		if (typeof data === "number") {
-			return values.find(entry => entry.id === data) || null;
-		} else if (typeof data === "string") {
-			return values.find(entry => entry.name === data) || null;
-		} else {
-			const matched = values.filter(entry => Object.entries(data).every(property => property[0] in entry.properties && (entry.properties as any)[property[0]] === property[1]));
-			return matched.length === 1 ? matched[0] : null;
-		}
+	public static from(data: number | string): Enum | null {
+		return (typeof data === "number" ? this.values().find(entry => entry.id === data) : this.values().find(entry => entry.name === data)) ?? null;
+	}
+
+	/**
+	 * Returns total amount of the entries that the current enum has.
+	 * @returns Amount of the entries.
+	 */
+	public static getLength(): number {
+		return this.__length ?? (this.__length = this.values().length);
+	}
+
+	/**
+	 * Calls the the enum is used in foreach loops
+	 */
+	public static *[Symbol.iterator](): Generator<Enum> {
+		for (const item of this.values())
+			yield item;
 	}
 }
-
-type Nullable<T> = T | null | undefined;
