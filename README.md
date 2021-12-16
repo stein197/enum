@@ -13,32 +13,37 @@ The package provides only one simple class `Enum` that all complex enums must ex
 ```ts
 import Enum from "@stein197/enum";
 
-// Every enum entry that is going to be created will have inner unique numeric id
-class Status extends Enum<{code: number; message: string}> {
-	public static readonly OK = new Status({code: 200, message: "Ok"});
-	public static readonly NOT_FOUND = new Status({code: 404, message: "Not found"});
-	public static readonly INTERNAL_SERVER_ERROR = new Status({code: 500, message: "Internal server error"}, 500); // Manually set entry id
-	// ...
+// Every enum entry that is going to be created will have inner unique numeric id and name properties
+class Status extends Enum {
+	public static readonly OK = new Status(200, "Ok");
+	public static readonly NOT_FOUND = new Status(404, "Not found");
+	public static readonly INTERNAL_SERVER_ERROR = new Status(500, "Internal server error", 500); // Manually set entry id
+
+	// Constructor can be omitted. In such a case only items with numberic ids will be created
+	public constructor(public readonly code: number, public readonly message: string, id?: number) {
+		super(id);
+	}
+
 	// Since it's a regular class, methods can be used as well
-	public getLabel(): string {
-		return this.properties.label;
+	public getName(): string {
+		return this.name;
 	}
 }
 
-// Properties usage
-Status.OK.properties.message; // "Ok"
+// Unique properties
+Status.OK.id; // 0
 Status.NOT_FOUND.name; // "NOT_FOUND"
-Status.NOT_FOUND.id; // 2
 Status.INTERNAL_SERVER_ERROR.id; // 500
 
-// Returning of all the entries
-Status.values<Status>(); // [Status.OK, Status.NOT_FOUND, Status.INTERNAL_SERVER_ERROR]
+// Custom properties and methods
+Status.OK.message; // "Ok"
+Status.OK.getName(); // "OK"
 
-// Retrieving entries by data
-Status.from<Status>(0); // By id: Status.OK
-Status.from<Status>("NOT_FOUND"); // By name: Status.NOT_FOUND
-Status.from<Status>({code: 500}); // By properties: Status.INTERNAL_SERVER_ERROR
-Status.from<Status>("NONEXISTENT"); // null
+// Retrieving arbitrary data
+Status.values(); // [Status.OK, Status.NOT_FOUND, Status.INTERNAL_SERVER_ERROR]
+Status.from(0); // By id: Status.OK
+Status.from("NOT_FOUND"); // By name: Status.NOT_FOUND
+Status.from("NONEXISTENT"); // null
 ```
 
 ## NPM scripts
