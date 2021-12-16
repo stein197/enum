@@ -21,7 +21,7 @@ export default abstract class Enum {
 	 * Unique name of the entry.
 	 */
 	public get name(): string {
-		return this.__name || (this.__name = Object.entries(this.constructor).filter(entry => entry[1] === this)[0][0]);
+		return this.__name ?? (this.__name = Object.entries(this.constructor).filter(entry => entry[1] === this)[0][0]);
 	}
 
 	/**
@@ -30,7 +30,7 @@ export default abstract class Enum {
 	 * @throws {@link Error} If id is manually set and it is less than 0 or less than the currently highest id across
 	 *                       the enum.
 	 */
-	protected constructor(id?: number) {
+	public constructor(id?: number) {
 		const ctor = this.constructor as typeof Enum;
 		if (id == void 0) {
 			this.id = ctor.__nextId++;
@@ -49,38 +49,28 @@ export default abstract class Enum {
 	 * @param id Id of searched entry.
 	 * @returns Entry or null if not found.
 	 */
-	public static from(id: number): Enum | null;
+	public static from<T extends Enum>(this: Constructor<T>, id: number): T | null;
 	
 	/**
 	 * Returns an enum entry by its name.
 	 * @param name Name of searched entry.
 	 * @returns Entry or null if not found.
 	 */
-	public static from(name: string): Enum | null;
+	public static from<T extends Enum>(this: Constructor<T>, name: string): T | null;
 
-	public static from(data: number | string): Enum | null {
-		return (typeof data === "number" ? this.values().find(entry => entry.id === data) : this.values().find(entry => entry.name === data)) ?? null;
+	public static from<T extends Enum>(this: Constructor<T>, data: number | string): T | null {
+		return (typeof data === "number" ? this.values().find(item => item.id === data) : this.values().find(item => item.name === data)) ?? null;
 	}
 
 	/**
 	 * Returns all entries that the current enum have. Does not return other static fields.
 	 * @returns All entries of the current enum in order they declared.
 	 */
-	 public static values(): Enum[] {
-		if (!this.__values) {
-			const entries: [string, Enum][] = Object.entries(this).filter(entry => entry[1] instanceof this);
-			this.__values = new Array(entries.length);
-			for (const i in entries)
-				this.__values[i] = entries[i][1];
-		}
-		return this.__values;
+	public static values<T extends Enum>(this: Constructor<T>): T[] {
+		return (this.__values ?? (this.__values = Object.values(this).filter(item => item instanceof this))) as T[];
 	}
+}
 
-	/**
-	 * Calls the the enum is used in foreach loops
-	 */
-	public static *[Symbol.iterator](): Generator<Enum> {
-		for (const value of this.values())
-			yield value;
-	}
+type Constructor<T extends Enum> = typeof Enum & {
+	new (...args: any[]): T;
 }

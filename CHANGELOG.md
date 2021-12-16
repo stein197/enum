@@ -1,12 +1,10 @@
 # CHANGELOG
 ## [Unreleased]
 
-## [2.0.0](../../compare/1.0.0..2.0.0) - XXXX-XX-XX
-### Added
-- `[Symbol.iterator]` method to iterate through an enum in `for..of` loops
-
+## [2.0.0](../../compare/1.0.0..2.0.0) - 2021-12-16
 ### Changed
-- Constructor is overridable now
+- Constructor can be overrided
+- Generic signature can be omitted
 
 ### Removed
 - `Enum<T>.properties` field and its generic properties signature
