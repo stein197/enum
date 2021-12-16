@@ -10,9 +10,8 @@
  */
 export default abstract class Enum {
 
-	private static __values: Enum[];
 	private static __nextId: number = 0;
-	private static __length: number;
+	private static __values: Enum[];
 
 	/** Unique entry id. Each instantiated entry has an id greater than previous by 1 */
 	public readonly id: number;
@@ -46,20 +45,6 @@ export default abstract class Enum {
 	}
 
 	/**
-	 * Returns all entries that the current enum have. Does not return other static fields.
-	 * @returns All entries of the current enum in order they declared.
-	 */
-	public static values(): Enum[] {
-		if (!this.__values) {
-			const entries: [string, Enum][] = Object.entries(this).filter(entry => entry[1] instanceof this);
-			this.__values = new Array(entries.length);
-			for (const i in entries)
-				this.__values[i] = entries[i][1];
-		}
-		return this.__values;
-	}
-
-	/**
 	 * Returns an enum entry by its id.
 	 * @param id Id of searched entry.
 	 * @returns Entry or null if not found.
@@ -78,11 +63,17 @@ export default abstract class Enum {
 	}
 
 	/**
-	 * Returns total amount of the entries that the current enum has.
-	 * @returns Amount of the entries.
+	 * Returns all entries that the current enum have. Does not return other static fields.
+	 * @returns All entries of the current enum in order they declared.
 	 */
-	public static getLength(): number {
-		return this.__length ?? (this.__length = this.values().length);
+	 public static values(): Enum[] {
+		if (!this.__values) {
+			const entries: [string, Enum][] = Object.entries(this).filter(entry => entry[1] instanceof this);
+			this.__values = new Array(entries.length);
+			for (const i in entries)
+				this.__values[i] = entries[i][1];
+		}
+		return this.__values;
 	}
 
 	/**
