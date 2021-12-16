@@ -80,7 +80,7 @@ export default abstract class Enum {
 	 * Calls the the enum is used in foreach loops
 	 */
 	public static *[Symbol.iterator](): Generator<Enum> {
-		for (const item of this.values())
-			yield item;
+		for (const value of this.values())
+			yield value;
 	}
 }

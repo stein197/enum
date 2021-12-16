@@ -6,7 +6,7 @@
 - `[Symbol.iterator]` method to iterate through an enum in `for..of` loops
 
 ### Changed
-- Constructor is overloadable now
+- Constructor is overridable now
 
 ### Removed
 - `Enum<T>.properties` field and its generic properties signature
