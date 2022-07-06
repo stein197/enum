@@ -1,9 +1,7 @@
 {
   "name": "@stein197/enum",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Complex enum implementation for JavaScript & TypeScript",
-  "main": "Enum.js",
-  "types": "Enum.d.ts",
   "scripts": {
     "clean": "clean",
     "prebuild": "clean",
@@ -11,11 +9,11 @@
     "prebuild:dev": "clean",
     "build:dev": "tsc --allowUnusedLabels true --noUnusedLocals false --noUnusedParameters false",
     "pretest": "npm run build:dev",
-    "test": "mocha EnumTest.js"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stein197/enum.git"
+    "url": "git+https://github.com/stein197/js-enum.git"
   },
   "keywords": [
     "typescript",
@@ -25,13 +23,13 @@
   "author": "Nail Gafarov <nil20122013@gmail.com> (https://gnail.dev)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/stein197/enum/issues"
+    "url": "https://github.com/stein197/js-enum/issues"
   },
-  "homepage": "https://github.com/stein197/enum#readme",
+  "homepage": "https://github.com/stein197/js-enum#readme",
   "devDependencies": {
-    "@types/mocha": "^9.0.0",
-    "mocha": "^9.1.2",
-    "should": "^13.2.3",
-    "typescript": "^4.4.3"
+    "@types/mocha": "9.0.0",
+    "mocha": "9.1.2",
+    "should": "13.2.3",
+    "typescript": "4.4.3"
   }
 }

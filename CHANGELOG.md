@@ -1,6 +1,10 @@
 # CHANGELOG
 ## [Unreleased]
 
+## [2.1.0](../../compare/2.0.0..2.1.0) - 2022-07-06
+### Removed
+- `id` field
+
 ## [2.0.0](../../compare/1.0.0..2.0.0) - 2021-12-16
 ### Changed
 - Constructor can be overrided

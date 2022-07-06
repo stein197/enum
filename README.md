@@ -13,37 +13,31 @@ The package provides only one simple class `Enum` that all complex enums must ex
 ```ts
 import Enum from "@stein197/enum";
 
-// Every enum entry that is going to be created will have inner unique numeric id and name properties
 class Status extends Enum {
-	public static readonly OK = new Status(200, "Ok");
-	public static readonly NOT_FOUND = new Status(404, "Not found");
-	public static readonly INTERNAL_SERVER_ERROR = new Status(500, "Internal server error", 500); // Manually set entry id
 
-	// Constructor can be omitted. In such a case only items with numberic ids will be created
-	public constructor(public readonly code: number, public readonly message: string, id?: number) {
-		super(id);
-	}
+	public static readonly Ok = new Status(200, "Ok");
+	public static readonly NotFound = new Status(404, "Not found");
+	public static readonly InternalServerError = new Status(500, "Internal server error");
+
+	public constructor(public readonly code: number, public readonly message: string) {}
 
 	// Since it's a regular class, methods can be used as well
-	public getName(): string {
-		return this.name;
+	public getMessage(): string {
+		return this.message;
 	}
 }
 
 // Unique properties
-Status.OK.id; // 0
-Status.NOT_FOUND.name; // "NOT_FOUND"
-Status.INTERNAL_SERVER_ERROR.id; // 500
+Status.NotFound.name; // "NOT_FOUND"
 
 // Custom properties and methods
-Status.OK.message; // "Ok"
-Status.OK.getName(); // "OK"
+Status.Ok.message; // "Ok"
+Status.Ok.getMessage(); // "Ok"
 
 // Retrieving arbitrary data
-Status.values(); // [Status.OK, Status.NOT_FOUND, Status.INTERNAL_SERVER_ERROR]
-Status.from(0); // By id: Status.OK
-Status.from("NOT_FOUND"); // By name: Status.NOT_FOUND
-Status.from("NONEXISTENT"); // null
+Status.values(); // [Status.Ok, Status.NotFound, Status.InternalServerError]
+Status.from("NotFound"); // By name: Status.NotFound
+Status.from("Nonexistent"); // null
 ```
 
 ## NPM scripts
